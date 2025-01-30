@@ -1,0 +1,97 @@
+activity_alert_dialog_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AlertDialogDemo">
+
+    <Button
+        android:id="@+id/exitAlertDialogButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        android:onClick="exit"
+        android:layout_centerInParent="true">
+    </Button>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:layout_above="@+id/exitAlertDialogButtonView"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        android:textStyle="normal|bold"
+        android:gravity="center">
+    </TextView>
+
+</RelativeLayout>
+
+AlertDialogDemo.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import android.content.DialogInterface;
+import android.view.View;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+
+
+public class AlertDialogDemo extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_alert_dialog_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
+    public void exit(View view){
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Confirmed Exit !!!");
+        builder.setIcon(R.drawable.question_mark);
+        builder.setMessage("Aru You Sure , You Want to Exit. ????");
+        builder.setCancelable(true);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+                Toast.makeText(getApplicationContext(),"Sucessfully Exit",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getApplicationContext(),"You click on No",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getApplicationContext(),"You click on Cancel",Toast.LENGTH_LONG).show();
+            }
+        });
+        AlertDialog alertDialog= builder.create();
+        alertDialog.show();
+    }
+}

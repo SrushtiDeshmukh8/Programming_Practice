@@ -1,0 +1,79 @@
+activity_array_adaptor_demo1.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ArrayAdapterDemo1">
+
+    <ListView
+        android:id="@+id/simpleArrayListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="false"
+        android:divider="#DB04EF"
+        android:dividerHeight="3dp">
+    </ListView>
+
+</RelativeLayout>
+
+
+ArrayAdaptorDemo1.java
+
+package com.example.myapplication;
+
+import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+
+public class ArrayAdapterDemo1 extends AppCompatActivity {
+    ListView simpleArrayAdaptorListView;
+    String animals[]={"Apple","Banana","Watermelon","Chiku","Grapes","Pinaaple","Mango"};
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_array_adapter_demo1);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        simpleArrayAdaptorListView=(ListView) findViewById(R.id.simpleArrayListView);
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.arrayadapter_listview_layout,R.id.arrayAdaptorTextView,animals);
+        simpleArrayAdaptorListView.setAdapter(arrayAdapter);
+    }
+}
+
+arrayadaptor_listview_layout.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/arrayAdaptorTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:layout_gravity="center"
+        android:textColor="#000">
+    </TextView>
+
+</LinearLayout>

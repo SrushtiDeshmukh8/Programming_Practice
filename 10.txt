@@ -1,0 +1,95 @@
+activity_notification_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/sendNotificationButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Notification"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>
+
+NotificationDemo.java
+package com.example.myapplication;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.res.ResourcesCompat;
+
+public class NotificationDemo extends AppCompatActivity {
+    NotificationManager notificationManager;
+    private static final int NOTIFICATION_ID = 101;
+    private static final String CHANNEL_ID = "MyAppChannel";
+    Button sendNotificationButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_notification_demo);
+
+        // Initialize the button
+        sendNotificationButton = findViewById(R.id.sendNotificationButtonView);
+        sendNotificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendNotification();
+            }
+        });
+    }
+
+    public void sendNotification() {
+        // Load the 'data.png' drawable resource
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.data, null);
+
+        Bitmap largeIcon = null;
+
+        // Check if the drawable is a BitmapDrawable
+        if (drawable instanceof BitmapDrawable) {
+            // Cast to BitmapDrawable and get the Bitmap
+            largeIcon = ((BitmapDrawable) drawable).getBitmap();
+        } else {
+            // Handle other types of drawables (e.g., VectorDrawable)
+            // In this case, you may want to convert the VectorDrawable to a Bitmap manually if needed.
+            largeIcon = null;  // You can leave it null if not a Bitmap
+        }
+
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        // For Android 8.0 (API 26) and above, create a NotificationChannel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "My Application Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        // Create the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.data)                   // Small icon
+                .setLargeIcon(largeIcon)                         // Large icon, if available
+                .setContentTitle("My Application Notification")   // Title
+                .setContentText("This is a new notification!")    // Content text
+                .setPriority(NotificationCompat.PRIORITY_HIGH)    // High priority
+                .setAutoCancel(true);                            // Auto dismiss on click
+
+        // Send the notification
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+}

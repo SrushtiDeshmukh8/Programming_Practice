@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".JSONParserDemo">
+
+    <ListView
+        android:id="@+id/user_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="1dp">
+    </ListView>
+
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+com.example.myapplication;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class JSONParserDemo extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_jsonparser_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+
+        String jsonStr = getListData();
+        try {
+            ArrayList<HashMap<String,String>> userList=new ArrayList<>();
+            ListView userListView=(ListView) findViewById(R.id.user_list);
+            JSONObject jObj=new JSONObject(jsonStr);
+            JSONArray jsonArray=jObj.getJSONArray("users");
+            for(int i=0;i<jsonArray.length();i++){
+                HashMap<String,String> user=new HashMap<>();
+                JSONObject obj=jsonArray.getJSONObject(i);
+                user.put("name",obj.getString("name"));
+                user.put("designation",obj.getString("designation"));
+                user.put("location",obj.getString("location"));
+                userList.add(user);
+            }
+
+            ListAdapter adapter=new SimpleAdapter(JSONParserDemo.this,userList,R.layout.emp_details,new String[]{"name","designation","location"},new int[]{R.id.name,R.id.designation,R.id.location});
+            userListView.setAdapter(adapter);
+        }
+
+        catch (JSONException ex){
+            Log.e("JSONParser Example","unexpected JSON Exception",ex);
+        }
+    }
+
+    private String getListData(){
+        String jsonStr="{\"users\":["+
+                "{\"name\":\"Suresh Sharma\",\"designation\":\"Team Leader\",\"location\":\"Hyderabad\"}"+
+                ",{\"name\":\"Rohini Shah \",\"designation\":\"Agricultural Officer\",\"location\":\"Patna\"}"+
+                ",{\"name\":\"Mohini Sharma\",\"designation\":\"Chartered Account\",\"location\":\"Guntur\"}]}";
+                return jsonStr;
+
+    }
+}
+
+
+
+
+
+##emp_details
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <TextView
+       android:id="@+id/name"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textStyle="bold|italic"
+       android:textSize="20sp">
+   </TextView>
+
+    <TextView
+        android:id="@+id/designation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:layout_marginTop="7dp"
+        android:layout_below="@id/name"
+        android:textColor="#020412">
+    </TextView>
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/designation"
+        android:layout_alignBottom="@id/designation"
+        android:layout_alignParentRight="true"
+        android:textColor="#020412"
+        android:textSize="20sp">
+    </TextView>
+
+
+</RelativeLayout>

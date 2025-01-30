@@ -1,0 +1,397 @@
+activity_context_menu_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ContextMenuDemo">
+
+    <Toolbar
+        android:id="@+id/contextMenuToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:title="@string/app_name"
+        android:background="@color/design_default_color_primary">
+    </Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contextMenuToolBar"
+        android:text="CONTEXT MENU EXAMPLE"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/holo_green_light">
+    </TextView>
+
+    <Button
+        android:id="@+id/contaxtMenuButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Long press me"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:layout_centerInParent="true">
+    </Button>
+</RelativeLayout>
+
+
+ContextMenuDemo.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+import android.widget.Toolbar;
+import androidx.annotation.NonNull;
+
+
+public class ContextMenuDemo extends AppCompatActivity {
+    Button contextMenuButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_context_menu_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        Toolbar toolbar=(Toolbar) findViewById(R.id.contextMenuToolBar);
+        setActionBar(toolbar);
+        contextMenuButton=(Button) findViewById(R.id.contaxtMenuButtonView);
+        registerForContextMenu(contextMenuButton);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Context Menu");
+        menu.add(0, v.getId(), 1, "Upload");
+        menu.add(0, v.getId(), 2, "Search");
+        menu.add(0, v.getId(), 3, "Share");
+        menu.add(0, v.getId(), 4, "Bookmark");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show(); return true;
+    }
+}
+
+
+activity_opiton_menu_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OptionMenuDemo">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/optionMenuToolbar"
+        app:title="@string/app_name"
+        android:background="#FF9800"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/optionMenuTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OPTION MENU EXAMPLE"
+        android:textStyle="italic|bold"
+        android:textSize="30dp"
+        android:layout_centerInParent="true">
+    </TextView>
+
+
+</RelativeLayout>
+
+menu_layout.xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/search_item"
+        android:title="Search" />
+
+    <item
+        android:id="@+id/upload_item"
+        android:title="Upload" />
+
+    <item
+        android:id="@+id/copy_item"
+        android:title="Copy" />
+
+    <item
+        android:id="@+id/print_item"
+        android:title="Print">
+        <menu>
+            <item
+                android:id="@+id/item1"
+                android:title="Item1"/>
+
+            <item
+                android:id="@+id/item2"
+                android:title="Item2"/>
+
+            <item
+                android:id="@+id/item3"
+                android:title="Item3"/>
+
+            <item
+                android:id="@+id/item4"
+                android:title="Item4"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/share_item"
+        android:title="Share" />
+
+    <item
+        android:id="@+id/bookmark_item"
+        android:title="BookMark"/>
+</menu>
+
+OPtionMenuDemo.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class OptionMenuDemo extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_option_menu_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        Toolbar toolbar=(Toolbar) findViewById(R.id.optionMenuToolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater= getMenuInflater();
+        menuInflater.inflate(R.menu.menu_layout,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.search_item){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.upload_item){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.copy_item){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.print_item){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item1){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item2){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item3){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item4){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.share_item){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.bookmark_item){
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+}
+
+activity_poppup_menu_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PopupMenuDemo">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/popMenuToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/app_name"
+        app:titleTextColor="#FFEB3B"
+        android:background="@color/design_default_color_primary">
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="POP MENU EXAMPLE"
+        android:textSize="30dp"
+        android:layout_below="@id/popMenuToolBar"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:textColor="#2196F3"
+        android:layout_centerHorizontal="true">
+    </TextView>
+
+    <Button
+        android:id="@+id/popMenuButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Show Popup Menu"
+        android:layout_marginTop="200dp"
+        android:layout_marginLeft="100dp">
+    </Button>
+
+
+</RelativeLayout>
+
+PoppupMenuDemo.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class PopupMenuDemo extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+    Button popMenuButton;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_popup_menu_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        Toolbar toolbar=(Toolbar) findViewById(R.id.popMenuToolBar);
+        setSupportActionBar(toolbar);
+
+        popMenuButton=(Button) findViewById(R.id.popMenuButtonView);
+
+        popMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu=new PopupMenu(PopupMenuDemo.this,view);
+                popupMenu.setOnMenuItemClickListener(PopupMenuDemo.this);
+                popupMenu.inflate(R.menu.menu_layout);
+                popupMenu.show();
+            }
+        });
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if(item.getItemId()==R.id.search_item){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.upload_item){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.copy_item){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.print_item){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item1){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item2){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item3){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.item4){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.share_item){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if(item.getItemId()==R.id.bookmark_item){
+            Toast.makeText(getApplicationContext(), "Selected Menu: "+item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+}

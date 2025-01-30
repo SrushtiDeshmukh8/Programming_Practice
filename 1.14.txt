@@ -1,0 +1,86 @@
+activity_calender_view_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CalenderViewDemo">
+
+    <TextView
+        android:id="@+id/CalenderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CALENDER VIEW DEMO"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold|italic"
+        android:textColor="@color/orange"
+        android:layout_marginTop="20dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/CalenderTextView"
+        android:text="SET THE DATE"
+        android:textSize="25dp"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold|italic"
+        android:textColor="@color/green"
+        android:layout_marginTop="50dp">
+    </TextView>
+
+    <CalendarView
+        android:id="@+id/calenderView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dateTextView"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true">
+    </CalendarView>
+
+</RelativeLayout>
+
+
+CalenderViewDemo.java
+package com.example.mcasemiii2024;
+
+import android.os.Bundle;
+import android.widget.CalendarView;
+import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class CalenderViewDemo extends AppCompatActivity {
+    CalendarView calendarView;
+    TextView setDateView;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_calender_view_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        calendarView=(CalendarView) findViewById(R.id.calenderView);
+        setDateView=(TextView) findViewById(R.id.dateTextView);
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayofMonth) {
+                String date=dayofMonth+" / "+(month+1)+" / "+year;
+                setDateView.setText(date);
+            }
+        });
+    }
+}

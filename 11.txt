@@ -1,0 +1,324 @@
+activity_sqlite_database_operation_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SQLiteDatabaseOperationDemo">
+
+    <TextView
+        android:id="@+id/userSignUpTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="USER SIGN UP"
+        android:textSize="40dp"
+        android:textStyle="bold|italic"
+        android:textColor="#FF5722"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/userIdTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Id:"
+        android:textSize="25dp"
+        android:textStyle="bold|italic"
+        android:textColor="#8BC34A"
+        android:layout_marginStart="50dp"
+        android:layout_below="@+id/userSignUpTextView"
+        android:layout_marginTop="100dp">
+    </TextView>
+
+    <EditText
+        android:id="@+id/userIdEditTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userSignUpTextView"
+        android:layout_alignBaseline="@+id/userIdTextView"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="26dp"
+        android:layout_toRightOf="@+id/userIdTextView"
+        android:textColor="#8BC34A"
+        android:hint="Enter User Id"
+        android:textSize="25dp">
+    </EditText>
+
+    <TextView
+        android:id="@+id/fullNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Full Name:"
+        android:textSize="25dp"
+        android:textStyle="bold|italic"
+        android:textColor="#8BC34A"
+        android:layout_marginStart="20dp"
+        android:layout_below="@+id/userIdTextView"
+        android:layout_marginTop="30dp">
+    </TextView>
+
+    <EditText
+        android:id="@+id/fullNameEditTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userIdEditTextView"
+        android:layout_marginTop="30dp"
+        android:hint="Enter Full Name"
+        android:textSize="25dp"
+        android:textColor="#3F51B5"
+        android:layout_marginStart="10dp"
+        android:layout_alignBaseline="@+id/fullNameTextView"
+        android:layout_toRightOf="@+id/fullNameTextView">
+    </EditText>
+
+    <TextView
+
+    SQLiteDatabaseOperationDemo.java
+    package com.example.myapplication;
+
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class SQLiteDatabaseOperationDemo extends AppCompatActivity {
+
+    EditText userid, fullName, userName, userPassword;
+    Button viewButton,insertButton,updateButton, deleteButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_sqlite_database_operation_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        //EditText Variable Refrence
+        userid=(EditText) findViewById(R.id.userIdEditTextView);
+        fullName=(EditText) findViewById(R.id.fullNameEditTextView);
+        userName=(EditText) findViewById(R.id.userNameEditTextView);
+        userPassword=(EditText) findViewById(R.id.userPasswordEditTextView);
+
+        //Button Variable Refrence
+
+        viewButton=(Button) findViewById(R.id.viewButtonView);
+        insertButton=(Button) findViewById(R.id.insertButtonView);
+        updateButton=(Button) findViewById(R.id.updateButtonView);
+        deleteButton=(Button) findViewById(R.id.deleteButtonView);
+
+        DatabaseOperation DOP= new DatabaseOperation(this);
+
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cursor cursor=DOP.viewData();
+                if(cursor.getCount()==0){
+                    Toast.makeText(getApplicationContext(), "Data is Not Found", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    StringBuffer sb=new StringBuffer();
+                    while (cursor.moveToNext()){
+                        sb.append("User Id: "+cursor.getInt(0)+"\n");
+                        sb.append("Full Name: "+cursor.getString(1)+"\n");
+                        sb.append("User Name: "+cursor.getString(2)+"\n");
+                        sb.append("User Password: "+cursor.getString(3)+"\n\n\n");
+                    }
+                    AlertDialog.Builder builder=new AlertDialog.Builder(SQLiteDatabaseOperationDemo.this);
+                    builder.setCancelable(true);
+                    builder.setTitle("SIGNUP USER DATA");
+                    builder.setMessage(sb.toString());
+                    builder.show();
+                }
+            }
+        });
+
+        insertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fName= fullName.getText().toString();
+                String uName=userName.getText().toString();
+                String uPass=userPassword.getText().toString();
+                if(fName.equals("")||uName.equals("")||uPass.equals("")){
+                    Toast.makeText(getApplicationContext(),"Enter All Fields",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    boolean flag=DOP.insertData(fName,uName,uPass);
+                    if(flag==true){
+                        Toast.makeText(getApplicationContext(),"Record Insert Successfully",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),"Record Insertion Failed",Toast.LENGTH_LONG).show();
+                    }
+                }
+                userid.setText("");
+                fullName.setText("");
+                userName.setText("");
+                userPassword.setText("");
+            }
+        });
+
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fName= fullName.getText().toString();
+                String uName=userName.getText().toString();
+                String uPass=userPassword.getText().toString();
+                if(fName.equals("")||uName.equals("")||uPass.equals("")){
+                    Toast.makeText(getApplicationContext(),"Enter All Fields",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    boolean flag=DOP.updateData(fName,uName,uPass);
+                    if(flag==true){
+                        Toast.makeText(getApplicationContext(),"Record Update Successfully",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),"Record Updation Failed",Toast.LENGTH_LONG).show();
+                    }
+                }
+                userid.setText("");
+                fullName.setText("");
+                userName.setText("");
+                userPassword.setText("");
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String uName=userName.getText().toString();
+                if(uName.equals("")){
+                    Toast.makeText(getApplicationContext(),"Enter User Name Field",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    boolean flag=DOP.deleteData(uName);
+                    if(flag==true){
+                        Toast.makeText(getApplicationContext(),"Record Delet Successfully",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),"Record Deletion Failed",Toast.LENGTH_LONG).show();
+                    }
+                }
+                userid.setText("");
+                fullName.setText("");
+                userName.setText("");
+                userPassword.setText("");
+            }
+        });
+
+
+    }
+}
+
+
+DatabaseOperation.java
+package com.example.myapplication;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
+public class DatabaseOperation extends SQLiteOpenHelper {
+    private static final String dbname="signup.db";
+
+    public DatabaseOperation(@Nullable Context context) {
+        super(context, dbname, null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String query="create table users(id integer primary key autoincrement,name text,username text, password text)";
+        sqLiteDatabase.execSQL(query);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL("drop table if exists users");
+        onCreate(sqLiteDatabase);
+    }
+
+    //View Data
+    public Cursor viewData(){
+        SQLiteDatabase db=this.getReadableDatabase();
+        Cursor cursor=db.rawQuery("select * from users", null);
+        return cursor;
+    }
+
+    //Insert Data
+    public boolean insertData(String name, String uname, String password){
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put("name",name);
+        values.put("username",uname);
+        values.put("password",password);
+        long flag=db.insert("users",null,values);
+        if(flag==-1){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    //Update Data
+
+    public boolean updateData(String name, String uname, String password){
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put("name",name);
+        values.put("username",uname);
+        values.put("password",password);
+        Cursor cursor=db.rawQuery("select * from users where username=?",new String[]{uname});
+        if(cursor.getCount()>0){
+            long flag=db.update("users",values,"username=?",new String[]{uname});
+            if(flag==-1){
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    //Delete Data
+
+    public boolean deleteData(String userName){
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor cursor=db.rawQuery("select * from users where username=?",new String[]{userName});
+        if(cursor.getCount()>0){
+            long flag=db.delete("users","username=?",new String[]{userName});
+            if(flag==-1){
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+}

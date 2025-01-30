@@ -1,0 +1,86 @@
+activity_wi_fi_on_off_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WiFiOnOffDemo">
+
+    <TextView
+        android:id="@+id/wiFiStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:textStyle="italic|bold"
+        android:text="STATUS"
+        android:textSize="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp">
+    </TextView>
+
+    <ToggleButton
+        android:id="@+id/wiFiToggleButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:checked="false"
+        android:textColor="@color/red">
+    </ToggleButton>
+
+</RelativeLayout>
+
+
+WiFiOnOffDemo.java
+package com.example.mcasemiii2024;
+
+import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class WiFiOnOffDemo extends AppCompatActivity {
+    TextView wiFiStatusText;
+    ToggleButton wiFiToggleButton;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_wi_fi_on_off_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        wiFiStatusText=(TextView) findViewById(R.id.wiFiStatusTextView);
+        wiFiToggleButton=(ToggleButton) findViewById(R.id.wiFiToggleButtonView);
+
+        wiFiToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if(checked){
+                    WifiManager wifiManager=(WifiManager) getSystemService(Context.WIFI_SERVICE);
+                    wifiManager.setWifiEnabled(true);
+                    wiFiStatusText.setText("WIFI IS: ON");
+                }else {
+                    WifiManager wifiManager=(WifiManager) getSystemService(Context.WIFI_SERVICE);
+                    wifiManager.setWifiEnabled(false);
+                    wiFiStatusText.setText("WIFI IS: OFF");
+                }
+            }
+        });
+    }
+}

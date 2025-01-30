@@ -1,0 +1,237 @@
+activity_fragment_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragmentDemo">
+
+    <Button
+        android:id="@+id/firstFragmentButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="FIRST FRAGMENT"
+        android:textSize="25dp"
+        android:textStyle="bold|italic">
+    </Button>
+
+    <FrameLayout
+        android:id="@+id/fragmentFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/secondFragmentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="SECOND FRAGMENT"
+            android:textSize="25dp"
+            android:textStyle="bold|italic">
+
+        </Button>
+    </FrameLayout>
+
+</RelativeLayout>
+
+FragmentDemo.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.view.View;
+import android.widget.Button;
+
+
+public class FragmentDemo extends AppCompatActivity {
+    Button firsFragment, secondFragment;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_fragment_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        firsFragment=(Button) findViewById(R.id.firstFragmentButton);
+        secondFragment=(Button) findViewById(R.id.secondFragmentButton);
+
+        firsFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new First_Fragment());
+            }
+        });//End of First Fragment Button Event
+
+        secondFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new Second_Fragment());
+            }
+        });//End of Second Fragment Button Event
+    }
+
+    private void loadFragment(Fragment fragment){
+        FragmentManager fragmentManager=getFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentFrameLayout,fragment);
+        fragmentTransaction.commit();
+    }
+}
+
+activity_first_fragment.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".First_Fragment">
+
+    <TextView
+        android:id="@+id/firstFragmentTextTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FIRST FRAGMENT"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:textColor="#D02727"
+        android:layout_centerInParent="true">
+    </TextView>
+
+    <Button
+        android:id="@+id/firstFragmentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FIRST FRAGMENT"
+        android:layout_below="@id/firstFragmentTextTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="25dp"
+        android:textStyle="bold|italic">
+    </Button>
+
+</RelativeLayout>
+
+First_Fragmnet.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+
+import android.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+import androidx.annotation.Nullable;
+
+
+public class First_Fragment extends Fragment {
+    View view;
+    Button firstFragmentButton;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        view=inflater.inflate(R.layout.activity_first_fragment,container,false);
+
+        firstFragmentButton=(Button) view.findViewById(R.id.firstFragmentButton);
+        firstFragmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "FIRS FRAGMENT", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        return view;
+    }
+}
+
+activity_second_fragment.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Second_Fragment">
+
+    <TextView
+        android:id="@+id/secondfragmentTextTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SECOND FRAGMENT"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:textColor="#1C54D9"
+        android:layout_centerInParent="true">
+    </TextView>
+
+    <Button
+        android:id="@+id/secondFragmentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SECOND FRAGMENT"
+        android:layout_below="@id/secondfragmentTextTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="25dp"
+        android:textStyle="bold|italic">
+    </Button>
+
+</RelativeLayout>
+
+Second_Fragment.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+
+import android.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+public class Second_Fragment extends Fragment {
+    View view;
+    Button secondFragmentButton;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view=inflater.inflate(R.layout.activity_second_fragment,container,false);
+        secondFragmentButton=(Button) view.findViewById(R.id.secondFragmentButton);
+
+        secondFragmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "SECONF FRGMENT", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        return view;
+    }
+}
+
+

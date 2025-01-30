@@ -1,0 +1,109 @@
+activity_time_picker_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TimePickerDemo">
+
+    <TextView
+        android:id="@+id/timePickerHeadingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="TIME PICKER DIALOG IN ANDROID"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="#013D04">
+    </TextView>
+
+    <TextView
+        android:id="@+id/selectedTimeDisplayTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TIME"
+        android:textStyle="bold|italic"
+        android:textSize="30dp"
+        android:layout_centerInParent="true"
+        android:textColor="@color/orange">
+    </TextView>
+
+    <Button
+        android:id="@+id/pickTimeButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/selectedTimeDisplayTextView"
+        android:layout_marginTop="20dp"
+        android:text="PICK TIME"
+        android:textSize="25dp"
+        android:textStyle="bold">
+    </Button>
+
+</RelativeLayout>
+
+
+TimePickerDemo.java
+package com.example.mcasemiii2024;
+
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Calendar;
+
+public class TimePickerDemo extends AppCompatActivity {
+    private TextView displayTimeTextView;
+    private Button pickTimeButtonView;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_time_picker_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        displayTimeTextView=(TextView) findViewById(R.id.selectedTimeDisplayTextView);
+        pickTimeButtonView=(Button) findViewById(R.id.pickTimeButtonView);
+        pickTimeButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar=Calendar.getInstance();
+                int hour=calendar.get(Calendar.HOUR);
+                int minute=calendar.get(Calendar.MINUTE);
+                int second=calendar.get(Calendar.SECOND);
+
+                TimePickerDialog timePickerDialog=new TimePickerDialog(TimePickerDemo.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePickerView, int hourofDay, int minute) {
+                        String am_pm;
+                        if(hourofDay < 12)
+                        {
+                            am_pm="AM";
+                        }else {
+                            am_pm="PM";
+                        }
+                        displayTimeTextView.setText(hourofDay+" :"+minute+" "+am_pm);
+                    }
+                },hour, minute,false);
+                timePickerDialog.show();
+            } //End of OnClick Method
+        });// end of setOnClickListener
+    }
+}

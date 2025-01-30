@@ -1,0 +1,100 @@
+activity_relative_layout_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".RelativeLayoutDemo">
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Relative Layout VIEW Arrangement"
+        android:textSize="20dp"
+        android:textColor="@color/orange"
+        android:textStyle="italic|bold"
+        android:layout_centerHorizontal="true">
+    </TextView>
+
+    <Button
+        android:id="@+id/btn1ButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Top Left Button"
+        android:textSize="15sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true">
+    </Button>
+
+    <Button
+        android:id="@+id/btn2ButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Top Right Button"
+        android:textSize="15sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true">
+    </Button>
+
+    <Button
+        android:id="@+id/btn3ButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bottom Left Button"
+        android:textSize="15sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true">
+    </Button>
+
+    <Button
+        android:id="@+id/btn4ButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bottom Right Button"
+        android:textSize="15sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true">
+    </Button>
+
+    <Button
+        android:id="@+id/btn5ButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Middle Button"
+        android:textSize="15sp"
+        android:layout_centerInParent="true">
+    </Button>
+
+
+</RelativeLayout>
+
+RelativeLayoutDemo.java
+package com.example.mcasemiii2024;
+
+import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class RelativeLayoutDemo extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_relative_layout_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+}

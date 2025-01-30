@@ -1,0 +1,100 @@
+activity_blutooth_on_off_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BlutoothOnOffDemo">
+
+    <TextView
+        android:id="@+id/blutoothStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:textStyle="italic|bold"
+        android:text="STATUS"
+        android:textSize="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp">
+    </TextView>
+
+    <ToggleButton
+        android:id="@+id/blutoothToggleButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:checked="false"
+        android:textColor="@color/red">
+    </ToggleButton>
+
+
+</RelativeLayout>
+
+
+BlutoothOnOffDemo.java
+package com.example.mcasemiii2024;
+
+import android.bluetooth.BluetoothAdapter;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.widget.CompoundButton;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class BlutoothOnOffDemo extends AppCompatActivity {
+    TextView blutoothStatusText;
+    ToggleButton blutoothToggleButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_blutooth_on_off_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        blutoothStatusText = (TextView) findViewById(R.id.blutoothStatusTextView);
+        blutoothToggleButton = (ToggleButton) findViewById(R.id.blutoothToggleButtonView);
+
+        blutoothToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if (checked) {
+                    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    bluetoothAdapter.enable();
+                    blutoothStatusText.setText("BLUTOOTH IS : ON");
+                }else {
+                    BluetoothAdapter bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
+                    bluetoothAdapter.disable();
+                    blutoothStatusText.setText("BLUTOOTH IS : OFF");
+                }
+
+            }
+        });
+    /*
+        if(blutoothToggleButton.isChecked()){
+            BluetoothAdapter bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
+            bluetoothAdapter.enable();
+            blutoothStatusText.setText("BLUTOOTH IS : ON");
+        }else {
+            BluetoothAdapter bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
+            bluetoothAdapter.disable();
+            blutoothStatusText.setText("BLUTOOTH IS : OFF");
+        }
+        */
+    }
+}

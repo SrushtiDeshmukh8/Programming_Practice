@@ -1,0 +1,135 @@
+activity_rating_bar_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RatingBarDemo">
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_creator="1"
+        app:layout_constraintRight_creator="1"
+        app:layout_constraintTop_creator="1"
+        app:layout_constraintVertical_bias="0.127" />
+
+    <TextView
+        android:id="@+id/ratingBarTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="30sp"
+        android:text="Rate Me!!!"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_editor_absoluteX="127dp"
+        app:layout_editor_absoluteY="28dp"></TextView>
+
+    <TextView
+        android:id="@+id/ratingBarTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/ratingBarButtonView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+    <Button
+        android:id="@+id/ratingBarButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="432dp"
+        android:text="SUBMIT"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></Button>
+
+    <Button
+        android:id="@+id/ratingBarButtonView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="296dp"
+        android:text="Get Ratting"
+        android:onClick="call"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBarButtonView"></Button>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+RatingBarDemo.java
+
+package com.example.mcasemiii2024;
+
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class RatingBarDemo extends AppCompatActivity {
+    RatingBar ratingBar;
+    TextView rattingTextView;
+    Button rattingSubmitButton;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_rating_bar_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        ratingBar=(RatingBar) findViewById(R.id.ratingBar);
+        rattingTextView=(TextView) findViewById(R.id.ratingBarTextView2);
+        rattingSubmitButton=(Button) findViewById(R.id.ratingBarButtonView);
+
+        LayerDrawable stars=(LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+
+        rattingSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rattingTextView.setText("You Rated:" +String.valueOf(ratingBar.getRating()));
+                Toast.makeText(getApplicationContext(), "You Rated:" +String.valueOf(ratingBar.getRating()), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void call(View v){
+        rattingTextView.setText("You Rated:" +String.valueOf(ratingBar.getRating()));
+        Toast.makeText(getApplicationContext(), "You Rated:" +String.valueOf(ratingBar.getRating()), Toast.LENGTH_LONG).show();
+    }
+}

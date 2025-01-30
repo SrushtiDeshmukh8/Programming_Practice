@@ -1,0 +1,87 @@
+activity_seek_bar_demo.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SeekBarDemo">
+
+    <TextView
+        android:id="@+id/seekbartextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AIMCAR"
+        android:textStyle="bold|italic"
+        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp">
+    </TextView>
+
+    <SeekBar
+        android:id="@+id/seekbarView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:outlineSpotShadowColor="@color/green"
+        android:max="70">
+    </SeekBar>
+
+
+
+
+</RelativeLayout>
+
+SeekBarDemo.java
+
+package com.example.mcasemiii2024;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class SeekBarDemo extends AppCompatActivity {
+
+    TextView seekbarTextView;
+    SeekBar seekBar;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_seek_bar_demo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        seekbarTextView=(TextView) findViewById(R.id.seekbartextView);
+        seekBar=(SeekBar)findViewById(R.id.seekbarView);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progrss, boolean b) {
+                seekbarTextView.setTextSize(progrss+1);
+                seekbarTextView.setTextColor(Color.GREEN);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                seekbarTextView.setTextColor(Color.GRAY);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                seekbarTextView.setTextColor(Color.RED);
+            }
+        });
+    }
+}
